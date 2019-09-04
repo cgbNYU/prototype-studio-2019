@@ -1,0 +1,3 @@
+Ideas
+	Platformer character that inherits functions from previous lives. eg. At first the character can only run. When it dies you get a descendant with a mutation such as jumping
+or attacking. Go on like that until you are able to beat the level. Try to do it in as few generations as possible.
