@@ -9,6 +9,7 @@ public class Move : MonoBehaviour
     
     //Public
     public bool isSideScroll;
+    public float Speed;
     
     //Private
     
