@@ -2,16 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//Generic movement class that can move a character around either in 3D or 2D space
-//2D space can be a side scroller or top down
-public class Move : MonoBehaviour
+public class TrailMoveBack : MonoBehaviour
 {
-    
-    //Public
-    public float Speed;
-    
-    //Private
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -21,8 +13,6 @@ public class Move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        transform.position += Vector3.forward * Time.deltaTime;
     }
-    
-    
 }

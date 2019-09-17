@@ -10,6 +10,8 @@ TagManager:
   - BlueBerry
   - RedBerry
   - YellowBerry
+  - BlueTrail
+  - RedTrail
   layers:
   - Default
   - TransparentFX
