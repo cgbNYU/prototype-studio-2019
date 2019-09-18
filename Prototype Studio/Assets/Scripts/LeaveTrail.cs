@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Rewired;
 using UnityEngine;
-using Rewired;
+
 
 public class LeaveTrail : MonoBehaviour
 {
@@ -10,6 +10,7 @@ public class LeaveTrail : MonoBehaviour
     //Public
     public GameObject BlueTrail;
     public GameObject RedTrail;
+    public GameObject Skull;
     public MeshRenderer ColorMat;
     public Material RedMat;
     public Material BlueMat;
@@ -78,18 +79,43 @@ public class LeaveTrail : MonoBehaviour
 
     private void HitCheck()
     {
-        RaycastHit2D[] hitList = Physics2D.RaycastAll(transform.position, fourMove.MoveDir, 1);
+        /*RaycastHit2D[] hitList = Physics2D.RaycastAll(transform.position, fourMove.MoveDir, .1f);
         foreach (RaycastHit2D hit in hitList)
         {
+            bool isSafe = false;
+            bool canDie = false;
+            if (color == PlayerColor.Red && hit.collider.gameObject.CompareTag("BlueTrail"))
+            {
+                isSafe = true;
+            }
+            else if (color == PlayerColor.Blue && hit.collider.gameObject.CompareTag("RedTrail"))
+            {
+                isSafe = true;
+            }
             if (color == PlayerColor.Red && hit.collider.gameObject.CompareTag("RedTrail"))
             {
-                //die
-                Debug.Log("Die");
+                canDie = true;
             }
             else if (color == PlayerColor.Blue && hit.collider.gameObject.CompareTag("BlueTrail"))
             {
-                //die
+                canDie = true;
+            }
+            Debug.Log("safe? " + isSafe);
+            if (canDie && !isSafe)
+            {
                 Debug.Log("Die");
+            }
+        }*/
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, fourMove.MoveDir, .1f);
+        if (hit == true)
+        {
+            if (hit.collider.gameObject.CompareTag("BlueTrail") && color == PlayerColor.Blue)
+            {
+                Die();
+            }
+            else if (hit.collider.gameObject.CompareTag("RedTrail") && color == PlayerColor.Red)
+            {
+                Die();
             }
         }
     }
@@ -108,6 +134,20 @@ public class LeaveTrail : MonoBehaviour
                 color = PlayerColor.Blue;
                 ColorMat.material = BlueMat;
             }
+        }
+    }
+
+    private void Die()
+    {
+        Instantiate(Skull, transform.position, transform.rotation);
+        Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Death"))
+        {
+            Die();
         }
     }
 }
