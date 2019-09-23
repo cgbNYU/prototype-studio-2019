@@ -1053,6 +1053,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2059667755}
   - component: {fileID: 2059667756}
+  - component: {fileID: 2059667757}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1090,3 +1091,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 4
   PlayerNum: 0
+--- !u!114 &2059667757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059667754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e9e8139386e78c43a5d4b7db21359fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Sausage: {fileID: 5766544869684000868, guid: e629a6fbdfa9a1845b905624f23023b2, type: 3}
+  ThrowSpeed: 0
+  PlayerNum: 0
+  ThrowDistance: 2
+  ThrowTarget: {fileID: 0}
