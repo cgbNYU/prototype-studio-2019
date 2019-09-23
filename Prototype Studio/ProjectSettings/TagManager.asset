@@ -12,6 +12,7 @@ TagManager:
   - YellowBerry
   - BlueTrail
   - RedTrail
+  - Death
   layers:
   - Default
   - TransparentFX
