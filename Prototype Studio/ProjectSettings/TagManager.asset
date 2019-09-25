@@ -13,6 +13,9 @@ TagManager:
   - BlueTrail
   - RedTrail
   - Death
+  - Sausage
+  - Dog
+  - Bag
   layers:
   - Default
   - TransparentFX
