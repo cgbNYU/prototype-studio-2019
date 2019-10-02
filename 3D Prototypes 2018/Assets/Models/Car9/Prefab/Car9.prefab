@@ -9,13 +9,16 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 400000}
+  - component: {fileID: 1049427239}
+  - component: {fileID: 1067582201154962016}
+  - component: {fileID: 114284583849340552}
   m_Layer: 0
   m_Name: Car9
-  m_TagString: Untagged
+  m_TagString: Car
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 0
@@ -23,9 +26,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.13224782, y: 0.46664837, z: 0.13275982}
-  m_LocalScale: {x: 0.22169673, y: 0.22169673, z: 0.22169673}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_Children:
   - {fileID: 400010}
   - {fileID: 400002}
@@ -35,6 +38,47 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1049427239
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7.3056445, y: 2.9335678, z: 18.636469}
+  m_Center: {x: 0.10871647, y: 0.22747874, z: -0.000010728835}
+--- !u!114 &1067582201154962016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45503bb7382aef5498fe8cc936bd5fd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Speed: 5
+  DestroyTime: 10
+--- !u!114 &114284583849340552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a87dc4b5d14c6364cb6ea41c1c913ca7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BounceDist: 2.4
+  BounceSpeed: 0.2
 --- !u!1 &100002
 GameObject:
   m_ObjectHideFlags: 0
@@ -52,7 +96,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &400002
 Transform:
   m_ObjectHideFlags: 0
@@ -129,7 +173,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &400004
 Transform:
   m_ObjectHideFlags: 0
@@ -206,7 +250,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &400006
 Transform:
   m_ObjectHideFlags: 0
@@ -283,7 +327,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &400008
 Transform:
   m_ObjectHideFlags: 0
@@ -360,7 +404,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &400010
 Transform:
   m_ObjectHideFlags: 0

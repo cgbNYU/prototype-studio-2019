@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
+using DG.Tweening;
 using UnityEngine;
 using Rewired;
 using Unity.Collections;
@@ -17,10 +18,19 @@ public class Dance : MonoBehaviour
     public float MaxSpeed;
     public float JumpForce;
     public float JumpFriction;
+    public Vector3 JumpSquash;
+    public float JumpSquashSpeed;
+    public float AirSpeed;
+    public float AirFriction;
     public float FallSpeed;
     public float SpinForce;
     public float FlipForce;
     public float SlamForce;
+
+    public AudioSource Source;
+    public AudioClip JumpSound;
+    public AudioClip BounceSound;
+    public AudioClip LandSound;
     
     //Private
     private Rigidbody _rb;
@@ -66,18 +76,22 @@ public class Dance : MonoBehaviour
                 Jumping();
                 Flip();
                 Spin();
-                //Slam();
+                Slam();
                 break;
             case PlayerState.Falling:
                 Falling();
                 Flip();
                 Spin();
+                Slam();
+                Bounce();
                 break;
             case PlayerState.Flipping:                
                 Spin();
                 Slam();
                 break;
             case PlayerState.Slamming:
+                Slamming();
+                Bounce();
                 break;
             default:
                 Debug.Log("State machine error");
@@ -93,18 +107,29 @@ public class Dance : MonoBehaviour
         moveVector.Normalize();
         if (Mathf.Abs(moveVector.magnitude) > 0)
         {
-            Debug.Log("Walking");
-            _moveVector += moveVector * WalkForce;
+            _moveVector += moveVector * WalkForce * Time.deltaTime;
             _moveVector = Vector3.ClampMagnitude(_moveVector, MaxSpeed);
         }
         else
         {
-            Debug.Log(("Slowing"));
             _moveVector += -_moveVector.normalized * WalkFriction * Time.deltaTime;
             if (_moveVector.magnitude <= .02)
             {
                 _moveVector = Vector3.zero;
             }
+        }
+    }
+
+    private void AirControl()
+    {
+        Vector3 moveVector = new Vector3(_rewiredPlayer.GetAxis("Horz"), 0, _rewiredPlayer.GetAxis("Vert"));
+        moveVector.Normalize();
+        if (Mathf.Abs(moveVector.magnitude) > 0)
+        {
+            float vertSpeed = _moveVector.y;
+            _moveVector += moveVector * AirSpeed;
+            _moveVector = Vector3.ClampMagnitude(_moveVector, MaxSpeed);
+            _moveVector.y = vertSpeed;
         }
     }
     
@@ -113,7 +138,7 @@ public class Dance : MonoBehaviour
     {                
         Vector3 moveVector = new Vector3(_rewiredPlayer.GetAxis("Flip_Horz"), 0, _rewiredPlayer.GetAxis("Flip_Vert"));
         moveVector.Normalize();
-        Quaternion flipVector = Quaternion.Euler(moveVector.z * FlipForce, 0, -moveVector.x * FlipForce) * transform.localRotation;
+        Quaternion flipVector = Quaternion.Euler(moveVector.z * FlipForce * Time.deltaTime, 0, -moveVector.x * FlipForce * Time.deltaTime) * transform.localRotation;
         transform.localRotation = flipVector;
     }
 
@@ -128,7 +153,8 @@ public class Dance : MonoBehaviour
         if (_rewiredPlayer.GetButtonDown("Jump"))
         {
             _moveVector.y = JumpForce;
-            _playerState = PlayerState.Jumping;           
+            Source.PlayOneShot(JumpSound);
+            _playerState = PlayerState.Jumping;
         }
     }
 
@@ -156,6 +182,7 @@ public class Dance : MonoBehaviour
                 Debug.Log("Landed");
                 _moveVector.y = 0;
                 transform.localRotation = Quaternion.Euler(Vector3.zero);
+                Source.PlayOneShot(LandSound);
                 _playerState = PlayerState.Idle;
             }
         }
@@ -166,7 +193,7 @@ public class Dance : MonoBehaviour
     {
         Vector3 spinVector = new Vector3(0, _rewiredPlayer.GetAxis("Spin"), 0);
         spinVector.Normalize();
-        Quaternion spinQuaternion = Quaternion.Euler(0, spinVector.y, 0) * transform.localRotation;
+        Quaternion spinQuaternion = Quaternion.Euler(0, spinVector.y * SpinForce * Time.deltaTime, 0) * transform.localRotation;
         Debug.Log("spin vector " + spinVector);
         transform.localRotation = spinQuaternion;
     }
@@ -177,7 +204,64 @@ public class Dance : MonoBehaviour
         if (_rewiredPlayer.GetButtonDown("Slam"))
         {
             _playerState = PlayerState.Slamming;
-            _rb.AddForce(Vector3.down * SlamForce);
+        }
+    }
+
+    private void Slamming()
+    {
+        _moveVector.y -= SlamForce * Time.deltaTime;
+        RaycastHit boxRay;
+
+        if (Physics.BoxCast(transform.position, new Vector3(transform.localScale.x/5, transform.localScale.y/5, transform.localScale.z/5), Vector3.down, out boxRay,
+            transform.localRotation, transform.localScale.y/2))
+        {
+            if (boxRay.collider.CompareTag("Ground"))
+            {
+                Debug.Log("Landed");
+                _moveVector.y = 0;
+                Source.PlayOneShot(LandSound);
+                transform.localRotation = Quaternion.Euler(Vector3.zero);
+                _playerState = PlayerState.Idle;
+            }
+        }
+    }
+
+    private void Bounce()
+    {
+        RaycastHit boxRay;
+
+        if (Physics.BoxCast(transform.position, new Vector3(transform.localScale.x/5, transform.localScale.y/5, transform.localScale.z/5), Vector3.down, out boxRay,
+            transform.localRotation, transform.localScale.y/2))
+        {
+            if (boxRay.collider.CompareTag("Bounce"))
+            {
+                Vector3 moveVector = new Vector3(_rewiredPlayer.GetAxis("Horz"), 0, _rewiredPlayer.GetAxis("Vert"));
+                moveVector.Normalize();
+                if (Mathf.Abs(moveVector.magnitude) > 0)
+                {
+                    _moveVector = moveVector * WalkForce;
+                    _moveVector = Vector3.ClampMagnitude(_moveVector, MaxSpeed);
+                }
+                _moveVector.y = JumpForce;
+                boxRay.collider.GetComponent<BounceHit>().Bounce();
+                Source.PlayOneShot(JumpSound);
+                _playerState = PlayerState.Jumping;
+            }
+            else if (boxRay.collider.CompareTag("Car"))
+            {
+                Vector3 moveVector = new Vector3(_rewiredPlayer.GetAxis("Horz"), 0, _rewiredPlayer.GetAxis("Vert"));
+                moveVector.Normalize();
+                if (Mathf.Abs(moveVector.magnitude) > 0)
+                {
+                    _moveVector = moveVector * WalkForce;
+                    _moveVector = Vector3.ClampMagnitude(_moveVector, MaxSpeed);
+                }
+                _moveVector.y = JumpForce;
+                boxRay.collider.GetComponent<BounceHit>().CarBounce();
+                Source.PlayOneShot(JumpSound);
+                Source.PlayOneShot(BounceSound);
+                _playerState = PlayerState.Jumping;
+            }
         }
     }
     
