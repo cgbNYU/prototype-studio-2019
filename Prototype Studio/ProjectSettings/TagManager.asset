@@ -16,6 +16,7 @@ TagManager:
   - Sausage
   - Dog
   - Bag
+  - Pellet
   layers:
   - Default
   - TransparentFX
