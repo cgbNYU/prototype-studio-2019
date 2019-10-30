@@ -5,12 +5,17 @@ using UnityEngine;
 
 public class PlayerKill : MonoBehaviour
 {
-    public GrabPellet _gPellet;
+    private GrabPellet _gPellet;
 
-
-    private void OnTriggerEnter2D(Collider2D other)
+    private void Start()
     {
-        if (other.CompareTag("Snake"))
+        _gPellet = GameObject.Find("Snake").GetComponent<GrabPellet>();
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Snake"))
         {
             _gPellet.Die();
         }

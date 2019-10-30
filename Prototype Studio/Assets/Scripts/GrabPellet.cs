@@ -42,6 +42,13 @@ public class GrabPellet : MonoBehaviour
 
     public void Die()
     {
+        foreach (GameObject segment in _segmentList)
+        {
+            Destroy(segment.GetComponent<HingeJoint2D>());
+        }
+
+        Flap flap = GetComponent<Flap>();
+        flap.Die();
     }
 
     private void OnTriggerEnter2D(Collider2D other)

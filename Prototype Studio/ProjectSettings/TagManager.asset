@@ -17,6 +17,7 @@ TagManager:
   - Dog
   - Bag
   - Pellet
+  - Snake
   layers:
   - Default
   - TransparentFX
