@@ -18,6 +18,10 @@ public class GrabPellet : MonoBehaviour
         _lastSegmentRb = GetComponent<Rigidbody2D>();
     }
 
+    public void Die()
+    {
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Pellet"))
