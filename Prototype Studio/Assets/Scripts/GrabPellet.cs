@@ -10,11 +10,15 @@ public class GrabPellet : MonoBehaviour
     public GameObject Pellet;
     public int TrailSizeMax;
     public int ScoreValue;
+    public AudioClip DieSound;
+    public AudioClip PelletSound;
+    public AudioClip ComboSound;
 
     private GameObject _lastSegment;
     private Rigidbody2D _lastSegmentRb;
     private List<GameObject> _segmentList;
     private GameObject _segmentParent;
+    private AudioSource _audio;
 
     void Start()
     {
@@ -22,11 +26,7 @@ public class GrabPellet : MonoBehaviour
         _lastSegmentRb = GetComponent<Rigidbody2D>();
         _segmentList = new List<GameObject>();
         _segmentParent = (GameObject)Instantiate(Resources.Load("Prefabs/SegmentParent"));
-    }
-
-    private void Update()
-    {
-        
+        _audio = GetComponent<AudioSource>();
     }
 
     private void Combo()
@@ -38,6 +38,7 @@ public class GrabPellet : MonoBehaviour
         _lastSegment = gameObject;
         _lastSegmentRb = GetComponent<Rigidbody2D>();
         _segmentList = new List<GameObject>();
+        _audio.PlayOneShot(ComboSound);
     }
 
     public void Die()
@@ -48,6 +49,7 @@ public class GrabPellet : MonoBehaviour
         }
 
         Flap flap = GetComponent<Flap>();
+        _audio.PlayOneShot(DieSound);
         flap.Die();
     }
 
@@ -56,20 +58,31 @@ public class GrabPellet : MonoBehaviour
         if (other.CompareTag("Pellet"))
         {
             Destroy(other.gameObject);
-            Vector3 newLocation = new Vector3(_lastSegment.transform.position.x - _lastSegment.transform.localScale.x, _lastSegment.transform.position.y, _lastSegment
-            .transform.position.z);
-            GameObject newSegment =
-                Instantiate(Pellet, newLocation, _lastSegment.transform.rotation);
-            newSegment.GetComponent<HingeJoint2D>().connectedBody = _lastSegmentRb;
-            newSegment.transform.parent = _segmentParent.transform;
-            _lastSegment = newSegment;
-            _lastSegmentRb = newSegment.GetComponent<Rigidbody2D>();
-            Score.Instance.AddScore(ScoreValue);
-            _segmentList.Add(_lastSegment);
-            if (_segmentList.Count >= TrailSizeMax)
+            _audio.PlayOneShot(PelletSound);
+            if (_segmentList.Count > TrailSizeMax)
             {
-                Combo();
+                Score.Instance.AddScore(ScoreValue * 2);
             }
+            else
+            {
+                Vector3 newLocation = new Vector3(
+                    _lastSegment.transform.position.x - _lastSegment.transform.localScale.x,
+                    _lastSegment.transform.position.y, _lastSegment
+                        .transform.position.z);
+                GameObject newSegment =
+                    Instantiate(Pellet, newLocation, _lastSegment.transform.rotation);
+                newSegment.GetComponent<HingeJoint2D>().connectedBody = _lastSegmentRb;
+                newSegment.transform.parent = _segmentParent.transform;
+                _lastSegment = newSegment;
+                _lastSegmentRb = newSegment.GetComponent<Rigidbody2D>();
+                Score.Instance.AddScore(ScoreValue);
+                _segmentList.Add(_lastSegment);
+            }
+        }
+        else if (other.CompareTag("Combo"))
+        {
+            Destroy(other.gameObject);
+            Combo();
         }
     }
 }

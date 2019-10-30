@@ -18,6 +18,7 @@ TagManager:
   - Bag
   - Pellet
   - Snake
+  - Combo
   layers:
   - Default
   - TransparentFX

@@ -29,7 +29,7 @@ public class SpawnObstacles : MonoBehaviour
 
     private void Spawn()
     {
-        int random = Random.Range(0, Obstacles.Length - 1);
+        int random = Random.Range(0, Obstacles.Length);
         Instantiate(Obstacles[random], transform.position, transform.rotation);
     }
 }
